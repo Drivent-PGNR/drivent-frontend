@@ -88,13 +88,6 @@ export default function PersonalInformationForm() {
         cpf: enrollment.cpf,
         birthday: enrollment.birthday,
         phone: enrollment.phone,
-        cep: enrollment.address.cep,
-        street: enrollment.address.street,
-        city: enrollment.address.city,
-        number: enrollment.address.number,
-        state: enrollment.address.state,
-        neighborhood: enrollment.address.neighborhood,
-        addressDetail: enrollment.address.addressDetail
       });
     }
   }, [enrollment]);

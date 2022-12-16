@@ -5,7 +5,7 @@ import * as hotelApi from '../../services/hotelApi';
 
 export default function useHotel() {
   const token = useToken();
-  
+
   const {
     data: hotels,
     loading: hotelLoading,
