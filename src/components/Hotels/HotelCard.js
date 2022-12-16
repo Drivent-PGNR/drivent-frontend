@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-export default function HotelCard({ id, name, image }) {
+export default function HotelCard({ id, name, image, selectedHotel, setSelectedHotel }) {
   return (
-    <Wrapper>
+    <Wrapper onClick={() => setSelectedHotel(id)} selected={id === selectedHotel}>
       <img src={image} alt='' />
       <h6>{name}</h6>
     </Wrapper>
@@ -12,7 +12,7 @@ export default function HotelCard({ id, name, image }) {
 const Wrapper = styled.div`
   width: 196px;
   height: 264px;
-  background-color: #EBEBEB;
+  background-color: ${props => props.selected ? '#FFEED2' : '#EBEBEB' };
   border-radius: 10px;
   padding: 16px 14px;
   margin-right: 1rem;

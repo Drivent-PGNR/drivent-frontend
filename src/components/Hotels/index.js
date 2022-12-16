@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Title } from '../Title';
 import { Subtitle } from '../Subtitle';
@@ -6,6 +7,7 @@ import HotelCard from './HotelCard';
 
 export default function Hotels() {
   const { hotels } = useHotel();
+  const [selectedHotel, setSelectedHotel] = useState(0);
 
   return (
     <>
@@ -13,7 +15,7 @@ export default function Hotels() {
       <Subtitle>Primeiro, escolha seu hotel</Subtitle>
       <HotelsCardContainer>
         {hotels ? (
-          hotels.map(hotel => <HotelCard key={hotel.id} {...hotel} />)
+          hotels.map(hotel => <HotelCard key={hotel.id} {...hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />)
         ) : (<></>)}
       </HotelsCardContainer>
     </>
