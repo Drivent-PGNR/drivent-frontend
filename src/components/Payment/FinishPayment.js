@@ -31,19 +31,18 @@ export default function FinishPayment() {
     <Section.Title>Ingresso e pagamento</Section.Title>
     {ticket ? <><Section.Subtitle>Ingresso escolhido</Section.Subtitle>
       <TicketContainer>
-        <p>{isRemote === 'Online' ? 'Online' : isRemote + includesHotel}</p>  
-        <p>{price}</p>
+        <p className='type'>{isRemote === 'Online' ? 'Online' : `${isRemote} + ${includesHotel}`}</p>  
+        <p>R$ {price}</p>
       </TicketContainer>
 
       <Section.Subtitle>Pagamento</Section.Subtitle>
+      <PaymentForm cardData={cardData} setCardData={setCardData}/>
+      <Button>FINALIZAR PAGAMENTO</Button> 
     </> :
-      <PaymentForm cardData={cardData} setCardData={setCardData}/>   
-    }
-
-    {/* <><MessageContainer>
+      <><MessageContainer>
         <PaymentRequiredMessage variant="h6">Finalize a seleção do ingresso para realizar o pagamento.</PaymentRequiredMessage>
-      </MessageContainer> </> */}
-    
+      </MessageContainer> </>  
+    }    
   </Section>;
 };
 
@@ -53,8 +52,44 @@ const TicketContainer = styled.div`
     border-radius: 20px;
     background-color: #FFEED2;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    margin-top: 17px;
+    margin-bottom: 30px;
+
+    p {
+        font-family: 'Roboto';
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 16.41px;
+        color: #898989;
+    }
+
+    .type {
+        margin-bottom: 8px;
+
+        font-size: 16px;
+        line-height: 18.75px;
+        color: #454545;
+    }
+`;
+
+const Button = styled.button`
+  width: 182px;
+  height: 37px;
+  border-radius: 4px;
+  background-color: #E0E0E0;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
+
+  margin-top: 37px;
+
+  font-family: 'Roboto';
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16.41px;
+  color: black;
 `;
 
 const PaymentRequiredMessage = styled(Typography)`
