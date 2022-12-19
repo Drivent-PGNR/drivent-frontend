@@ -19,6 +19,12 @@ function roomsContains(num, Rooms) {
 
 export default function HotelCard({ id, name, image, Rooms, selectedHotel, setSelectedHotel }) {
   const acommodationsMessage = createAcomodationsMessage(Rooms);
+  let vacancies = 0;
+  Rooms.forEach((room) => {
+    const capacity = room.capacity;
+    const bookings = room.Booking.length;
+    vacancies += (capacity - bookings);
+  });
 
   return (
     <Wrapper onClick={() => setSelectedHotel(id)} selected={id === selectedHotel}>
@@ -27,6 +33,10 @@ export default function HotelCard({ id, name, image, Rooms, selectedHotel, setSe
       <div>
         <h6>Tipos de acomodação:</h6>
         <p>{acommodationsMessage}</p>
+      </div>
+      <div>
+        <h6>Vagas disponíveis:</h6>
+        <p>{vacancies}</p>
       </div>
     </Wrapper>
   );
