@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import useCreateTicket from '../../hooks/api/useCreateTicket';
 import * as useTicket from '../../hooks/api/useTicket';
 import { Section } from '../Dashboard/Section';
 import TicketCards from './TicketCards';
 
-export default function Tickets({ staySelected, setStaySelected, hotelSelected, setHotelSelected }) {
+export default function Tickets({ next }) {
   const { ticketTypes } = useTicket.useTicketTypes();
+  const { CreateTicketLoading, CreateTicket } = useCreateTicket();
   const [stayOpt, setStayOpt] = useState([]);
+  const [staySelected, setStaySelected] = useState({});
   const [hotelOpt, setHotelOpt] = useState([]);
+  const [hotelSelected, setHotelSelected] = useState({});
 
   useEffect(() => {
     if (ticketTypes) {
@@ -28,6 +33,37 @@ export default function Tickets({ staySelected, setStaySelected, hotelSelected, 
     }
   }, [ticketTypes]);
 
+  async function handleSubmit() {
+    const ticketTypeId = getTicketType().id;
+    
+    try {
+      await CreateTicket({ ticketTypeId });
+      toast('Ticket criado com sucesso!');
+      next();
+    } catch (err) {
+      toast('Não foi possível criar seu ticket.');
+    }
+  }
+
+  function getTicketType() {
+    if (!staySelected.id) return;
+    
+    const isOnline = staySelected.name === 'Online';
+    if (isOnline) {
+      return ticketTypes.find(type => type.isRemote);
+    }
+
+    const isWithoutHotel = !hotelSelected.includesHotel;
+    if (isWithoutHotel) {
+      return ticketTypes.find(type => !type.includesHotel);
+    }
+
+    const isWithHotel = hotelSelected.includesHotel;
+    if (isWithHotel) {
+      return ticketTypes.find(type => type.includesHotel);
+    }
+  }
+
   return <Section>
     <Section.Title>Ingresso e pagamento</Section.Title>
     <Section.Subtitle>Primeiro, escolha sua modalidade de ingresso</Section.Subtitle>
@@ -36,6 +72,11 @@ export default function Tickets({ staySelected, setStaySelected, hotelSelected, 
     {(staySelected.isRemote === false) && <>
       <Section.Subtitle>Ótimo! Agora escolha sua modalidade de hospedagem</Section.Subtitle>
       <TicketCards data={hotelOpt} selected={hotelSelected} setSelected={setHotelSelected} />
+    </>}
+
+    {(staySelected.name === 'Online' || hotelSelected.name) && <>
+      <Section.Subtitle>Fechado! O total ficou em <strong>R$ {getTicketType().price}</strong>. Agora é so confirmar:</Section.Subtitle>
+      <Section.Button onClick={handleSubmit} disabled={CreateTicketLoading}>RESERVER INGRESSO</Section.Button>
     </>}
   </Section>;
 }
