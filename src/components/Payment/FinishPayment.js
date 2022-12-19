@@ -1,14 +1,13 @@
 import * as useTicket from '../../hooks/api/useTicket';
 import { Section } from '../Dashboard/Section';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import PaymentForm from './PaymentForm';
 
 export default function FinishPayment() {
-  const [isRemote, setIsRemote] = useState('');
-  const [includesHotel, setIncludesHotel] = useState('');
-  const [price, setPrice] = useState(0);
+  const { ticket } = useTicket.useTicket();
+  const [ticketType, setTicketType] = useState({ id: 0, isRemote: '', includesHotel: '', price: 0 });
   const [cardData, setCardData] = useState ({
     cvc: '',
     expiry: '',
@@ -18,21 +17,23 @@ export default function FinishPayment() {
     issuer: ''
   });
 
-  const { ticket } = useTicket.useTicket();
-
-  if (ticket) {
-    const ticketType = useTicket.useTicketTypes().ticketTypes.filter(type => type.id === ticket.ticketId);
-    setIsRemote(ticketType.isRemote ? 'Online' : 'Presencial');
-    setIncludesHotel(ticketType.includesHotel ? 'Com hotel' : 'Sem hotel');
-    setPrice(ticketType.price);
-  }
+  useEffect(() => {
+    if (ticket) {
+      const ticketType = ticket.TicketType;
+      setTicketType({
+        isRemote: ticketType.isRemote ? 'Online' : 'Presencial',
+        includesHotel: ticketType.includesHotel ? 'Com hotel' : 'Sem hotel',
+        price: ticketType.price
+      });
+    }
+  }, [ticket]);
 
   return <Section>
     <Section.Title>Ingresso e pagamento</Section.Title>
     {ticket ? <><Section.Subtitle>Ingresso escolhido</Section.Subtitle>
       <TicketContainer>
-        <p className='type'>{isRemote === 'Online' ? 'Online' : `${isRemote} + ${includesHotel}`}</p>  
-        <p>R$ {price}</p>
+        <p className='type'>{ticketType.isRemote === 'Online' ? 'Online' : `${ticketType.isRemote} + ${ticketType.includesHotel}`}</p>  
+        <p>R$ {ticketType.price}</p>
       </TicketContainer>
 
       <Section.Subtitle>Pagamento</Section.Subtitle>

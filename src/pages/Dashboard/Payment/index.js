@@ -3,18 +3,14 @@ import FinishPayment from '../../../components/Payment/FinishPayment';
 import Tickets from '../../../components/Tickets';
 
 export default function Payment() {
-  const [staySelected, setStaySelected] = useState({});
-  const [hotelSelected, setHotelSelected] = useState({});
-  let screen = 'select';
+  const [screen, setScreen] = useState('ticket');
 
-  if (staySelected.name === 'Online' || Object.values(hotelSelected).length !== 0) {
-    screen = 'payment';
-  }
+  const handleScreenChange = () => {
+    setScreen('payment');
+  };
   
-  return (
-    screen === 'select' ? 
-      <Tickets staySelected={staySelected} setStaySelected={setStaySelected} hotelSelected={hotelSelected} setHotelSelected={setHotelSelected}/>
-      :
-      <FinishPayment />
-  );
+  return (<>
+    {screen === 'ticket' && <Tickets next={handleScreenChange}/>}
+    {screen === 'payment' && <FinishPayment />}
+  </>);
 }
