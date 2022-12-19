@@ -5,26 +5,38 @@ import { Subtitle } from '../Subtitle';
 import useHotel from '../../hooks/api/useHotel';
 import HotelCard from './HotelCard';
 import Typography from '@material-ui/core/Typography';
+import usePayment from '../../hooks/api/usePayment';
 
 export default function Hotels() {
   const { hotels } = useHotel();
+  const { payment } = usePayment();
   const [selectedHotel, setSelectedHotel] = useState(0);
 
   return (
     <>
       <TitleSpacing>Escolha de hotel e quarto</TitleSpacing>
-      {hotels ? (<>
-        <Subtitle>Primeiro, escolha seu hotel</Subtitle>
-        <HotelsCardContainer>
-          {hotels ? (
-            hotels.map(hotel => <HotelCard key={hotel.id} {...hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />)
-          ) : (<>
-          </>)}
-        </HotelsCardContainer>
-      </>):
-        (<><MessageContainer>
-          <PaymentRequiredMessage variant="h6">Sua modalidade de ingresso não inclui hospedagem Prossiga para a escolha de atividades</PaymentRequiredMessage>
-        </MessageContainer> </>)}     
+      {payment ? (<>
+        {hotels ? (<>
+          <Subtitle>Primeiro, escolha seu hotel</Subtitle>
+          <HotelsCardContainer>
+            {hotels ? (
+              hotels.map(hotel => <HotelCard key={hotel.id} {...hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />)
+            ) : (<>
+            </>)}
+          </HotelsCardContainer>
+        </>):
+          (<><MessageContainer>
+            <PaymentRequiredMessage variant="h6">Sua modalidade de ingresso não inclui hospedagem Prossiga para a escolha de atividades</PaymentRequiredMessage>
+        
+          </MessageContainer> </>)}  
+      
+      </>)
+      
+        :(<><MessageContainer>
+          <PaymentRequiredMessage variant="h6">Precisa DO PAGAMENTO QUERIDO</PaymentRequiredMessage>
+      
+        </MessageContainer> </>)}
+         
     </>
   );
 }
@@ -48,7 +60,7 @@ const PaymentRequiredMessage = styled(Typography)`
   line-height: 23px;
   text-align: center;
   color: #8E8E8E;
-  max-width: 411px;
+  max-width: 504px;
 `;
 
 const MessageContainer = styled(Typography)`
