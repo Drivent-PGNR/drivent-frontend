@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import useCreateTicket from '../../hooks/api/useCreateTicket';
-import useTicketTypes from '../../hooks/api/useTicket';
+import * as useTicket from '../../hooks/api/useTicket';
 import { Section } from '../Dashboard/Section';
 import TicketCards from './TicketCards';
 
-export default function Tickets() {
-  const { ticketTypes } = useTicketTypes();
+export default function Tickets({ next }) {
+  const { ticketTypes } = useTicket.useTicketTypes();
   const { CreateTicketLoading, CreateTicket } = useCreateTicket();
   const [stayOpt, setStayOpt] = useState([]);
-  const [hotelOpt, setHotelOpt] = useState([]);
   const [staySelected, setStaySelected] = useState({});
+  const [hotelOpt, setHotelOpt] = useState([]);
   const [hotelSelected, setHotelSelected] = useState({});
 
   useEffect(() => {
@@ -39,6 +39,7 @@ export default function Tickets() {
     try {
       await CreateTicket({ ticketTypeId });
       toast('Ticket criado com sucesso!');
+      next();
     } catch (err) {
       toast('Não foi possível criar seu ticket.');
     }
