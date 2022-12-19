@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
-import useTicketTypes from '../../hooks/api/useTicket';
+import * as useTicket from '../../hooks/api/useTicket';
 import { Section } from '../Dashboard/Section';
 import TicketCards from './TicketCards';
 
-export default function Tickets() {
-  const { ticketTypes } = useTicketTypes();
+export default function Tickets({ staySelected, setStaySelected, hotelSelected, setHotelSelected }) {
+  const { ticketTypes } = useTicket.useTicketTypes();
   const [stayOpt, setStayOpt] = useState([]);
   const [hotelOpt, setHotelOpt] = useState([]);
-  const [staySelected, setStaySelected] = useState({});
-  const [hotelSelected, setHotelSelected] = useState({});
 
   useEffect(() => {
     if (ticketTypes) {
