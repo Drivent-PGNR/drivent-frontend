@@ -16,10 +16,13 @@ export default function FinishPayment() {
     number: '',
     issuer: ''
   });
+  const [ticketId, setTickedId] = useState(0);
+  const [paymentSucces, setPaymentSucces] = useState(false);
 
   useEffect(() => {
     if (ticket) {
       const ticketType = ticket.TicketType;
+      setTickedId(ticket.id);
       setTicketType({
         isRemote: ticketType.isRemote ? 'Online' : 'Presencial',
         includesHotel: ticketType.includesHotel ? 'Com hotel' : 'Sem hotel',
@@ -37,8 +40,10 @@ export default function FinishPayment() {
       </TicketContainer>
 
       <Section.Subtitle>Pagamento</Section.Subtitle>
-      <PaymentForm cardData={cardData} setCardData={setCardData}/>
-      <Button>FINALIZAR PAGAMENTO</Button> 
+      {paymentSucces ? 'Pagamento Confirmado - em construção' 
+        :  
+        <PaymentForm cardData={cardData} setCardData={setCardData} ticketId={ticketId} setPaymentSucces={setPaymentSucces}/>
+      }
     </> :
       <><MessageContainer>
         <PaymentRequiredMessage variant="h6">Finalize a seleção do ingresso para realizar o pagamento.</PaymentRequiredMessage>
@@ -75,22 +80,6 @@ const TicketContainer = styled.div`
         line-height: 18.75px;
         color: #454545;
     }
-`;
-
-const Button = styled.button`
-  width: 182px;
-  height: 37px;
-  border-radius: 4px;
-  background-color: #E0E0E0;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
-
-  margin-top: 37px;
-
-  font-family: 'Roboto';
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 16.41px;
-  color: black;
 `;
 
 const PaymentRequiredMessage = styled(Typography)`
