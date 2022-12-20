@@ -63,7 +63,7 @@ const TicketContainer = styled.div`
     justify-content: center;
     align-items: center;
 
-    margin-top: 17px;
+    margin-top: 18px;
     margin-bottom: 30px;
 
     p {
