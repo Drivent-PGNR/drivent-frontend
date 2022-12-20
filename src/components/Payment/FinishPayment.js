@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import PaymentForm from './PaymentForm';
+import PaymentSucces from './paymentSucces';
 
 export default function FinishPayment() {
   const { ticket } = useTicket.useTicket();
@@ -40,7 +41,7 @@ export default function FinishPayment() {
       </TicketContainer>
 
       <Section.Subtitle>Pagamento</Section.Subtitle>
-      {paymentSucces ? 'Pagamento Confirmado - em construção' 
+      {paymentSucces ? <PaymentSucces /> 
         :  
         <PaymentForm cardData={cardData} setCardData={setCardData} ticketId={ticketId} setPaymentSucces={setPaymentSucces}/>
       }
