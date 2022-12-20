@@ -22,12 +22,12 @@ export default function Tickets({ next }) {
           return { ...ticket, name: 'Presencial', price: `R$ ${ticket.price}` };
         });
       setStayOpt(arr);
-        
+
       setHotelOpt(ticketTypes
         .filter((ticket) => (!ticket.isRemote))
         .map(ticket => {
           const presentialPrice = +arr.find(stay => !stay.isRemote).price.replace('R$ ', '');
-          if(ticket.includesHotel) return { ...ticket, name: 'Com Hotel', price: `+ R$ ${ticket.price - presentialPrice}` };
+          if (ticket.includesHotel) return { ...ticket, name: 'Com Hotel', price: `+ R$ ${ticket.price - presentialPrice}` };
           return { ...ticket, name: 'Sem Hotel', price: '+ R$ 0' };
         }));
     }
@@ -35,7 +35,6 @@ export default function Tickets({ next }) {
 
   async function handleSubmit() {
     const ticketTypeId = getTicketType().id;
-    
     try {
       await CreateTicket({ ticketTypeId });
       toast('Ticket criado com sucesso!');
@@ -47,7 +46,7 @@ export default function Tickets({ next }) {
 
   function getTicketType() {
     if (!staySelected.id) return;
-    
+
     const isOnline = staySelected.name === 'Online';
     if (isOnline) {
       return ticketTypes.find(type => type.isRemote);
@@ -55,7 +54,7 @@ export default function Tickets({ next }) {
 
     const isWithoutHotel = !hotelSelected.includesHotel;
     if (isWithoutHotel) {
-      return ticketTypes.find(type => !type.includesHotel);
+      return ticketTypes.find(type => !type.includesHotel && !type.isRemote);
     }
 
     const isWithHotel = hotelSelected.includesHotel;
