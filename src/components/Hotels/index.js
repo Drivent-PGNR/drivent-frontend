@@ -13,18 +13,22 @@ export default function Hotels() {
   return (
     <>
       <TitleSpacing>Escolha de hotel e quarto</TitleSpacing>
-      {hotels ? (<>
-        <Subtitle>Primeiro, escolha seu hotel</Subtitle>
-        <HotelsCardContainer>
-          {hotels ? (
-            hotels.map(hotel => <HotelCard key={hotel.id} {...hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />)
-          ) : (<>
-          </>)}
-        </HotelsCardContainer>
-      </>):
-        (<><MessageContainer>
+      {hotels ? (
+        <>
+          <Subtitle>Primeiro, escolha seu hotel</Subtitle>
+          <HotelsCardContainer>
+            {hotels ? (
+              hotels.map(hotel => <HotelCard key={hotel.id} {...hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />)
+            ) : (
+              <></>
+            )}
+          </HotelsCardContainer>
+        </>
+      ) : (
+        <MessageContainer>
           <PaymentRequiredMessage variant="h6">Sua modalidade de ingresso não inclui hospedagem Prossiga para a escolha de atividades</PaymentRequiredMessage>
-        </MessageContainer> </>)}     
+        </MessageContainer>
+      )}
     </>
   );
 }
