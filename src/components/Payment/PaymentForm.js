@@ -1,9 +1,12 @@
 import React from 'react';
-import Cards from 'react-credit-cards';
-import 'react-credit-cards/es/styles-compiled.css';
+import Cards from 'react-credit-cards-2';
+import 'react-credit-cards-2/es/styles-compiled.css';
 import styled from 'styled-components';
+import usePayment from '../../hooks/api/usePayment';
+import { toast } from 'react-toastify';
+import { Section } from '../Dashboard/Section';
 
-export default function PaymentForm({ cardData, setCardData }) {
+export default function PaymentForm({ cardData, setCardData, ticketId, setPaymentSucces }) {
   const handleInputChange = (e) => {
     setCardData({ ...cardData, 
       [e.target.name]: e.target.value });
@@ -16,48 +19,64 @@ export default function PaymentForm({ cardData, setCardData }) {
   const getIssuer = ({ issuer }, isValid) => {
     setCardData({ ...cardData, issuer });
   };
-    
+
+  const { insertPayment } = usePayment(cardData, ticketId);  
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    try {
+      await insertPayment();
+      setPaymentSucces(true);
+    } catch (err) {
+      toast('Não foi possível realizar o pagamento!');
+    }
+  };
+
   return (
-    <FormContainer>
-      <Cards
-        cvc={cardData.cvc}
-        expiry={cardData.expiry}
-        name={cardData.name}
-        number={cardData.number}
-        focused={cardData.focus}
-        callback={getIssuer}
-      />
-      <form>
-    	<input
-          type="tel"
-          name="number"
-          placeholder="Card Number"
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
+    <>
+      <FormContainer>
+        <Cards
+          cvc={cardData.cvc}
+          expiry={cardData.expiry}
+          name={cardData.name}
+          number={cardData.number}
+          focused={cardData.focus}
+          callback={getIssuer}
         />
-        <input
-          type="tel"
-          name="name"
-          placeholder="Name"
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
-        />
-        <input
-          type="tel"
-          name="expiry"
-          placeholder="Valid Thru"
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
-        />
-        <input
-          type="tel"
-          name="cvc"
-          placeholder="CVC"
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
-        />
-      </form>
-    </FormContainer>
+        <form onSubmit={handleSubmit} id='cardForm'>
+    	    <input
+            type="tel"
+            name="number"
+            placeholder="Card Number"
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+          />
+          <input
+            type="tel"
+            name="name"
+            placeholder="Name"
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+          />
+          <input
+            type="tel"
+            name="expiry"
+            placeholder="Valid Thru"
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+          />
+          <input
+            type="tel"
+            name="cvc"
+            placeholder="CVC"
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+          />
+        </form>
+      </FormContainer>
+      <Section.Button type="submit" form='cardForm'>FINALIZAR PAGAMENTO</Section.Button>
+    </>
   );
 }
 
@@ -66,6 +85,7 @@ const FormContainer = styled.div`
  justify-content: start;
 
  margin-top: 17px;
+ margin-bottom: 20px;
 
  .rccs {
   margin: 0 15px 0 0 
