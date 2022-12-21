@@ -27,7 +27,7 @@ export default function HotelCard({ id, name, image, Rooms, selectedHotel, setSe
   });
 
   return (
-    <Wrapper onClick={() => setSelectedHotel(id)} selected={id === selectedHotel}>
+    <HotelCardWrapper onClick={() => setSelectedHotel(id)} selected={id === selectedHotel}>
       <img src={image} alt='' />
       <h4>{name}</h4>
       <div>
@@ -38,11 +38,11 @@ export default function HotelCard({ id, name, image, Rooms, selectedHotel, setSe
         <h6>Vagas disponíveis:</h6>
         <p>{vacancies}</p>
       </div>
-    </Wrapper>
+    </HotelCardWrapper>
   );
 }
 
-const Wrapper = styled.div`
+const HotelCardWrapper = styled.div`
   width: 196px;
   height: 264px;
   background-color: ${props => props.selected ? '#FFEED2' : '#EBEBEB' };
