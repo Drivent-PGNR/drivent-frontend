@@ -6,6 +6,6 @@ export async function getPayment(token) {
       Authorization: `Bearer ${token}`,
     },
   });
-
+  
   return response.data;
 }

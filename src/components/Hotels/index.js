@@ -6,6 +6,7 @@ import useHotel from '../../hooks/api/useHotel';
 import HotelCard from './HotelCard';
 import Typography from '@material-ui/core/Typography';
 import usePayment from '../../hooks/api/usePayment';
+import RoomCard from './RoomCard';
 
 export default function Hotels() {
   const { hotels } = useHotel();
@@ -16,26 +17,38 @@ export default function Hotels() {
     <>
       <TitleSpacing>Escolha de hotel e quarto</TitleSpacing>
       {payment ? (<>
+
         {hotels ? (<>
+
           <Subtitle>Primeiro, escolha seu hotel</Subtitle>
           <HotelsCardContainer>
             {hotels ? (
+
               hotels.map(hotel => <HotelCard key={hotel.id} {...hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />)
-            ) : (<>
-            </>)}
+            )            
+              : 
+              (<></>)
+            }
           </HotelsCardContainer>
-        </>):
-          (<><MessageContainer>
-            <PaymentRequiredMessage variant="h6">Sua modalidade de ingresso não inclui hospedagem Prossiga para a escolha de atividades</PaymentRequiredMessage>
-        
-          </MessageContainer> </>)}  
-      
-      </>)
-      
-        :(<><MessageContainer>
-          <PaymentRequiredMessage variant="h6">Precisa DO PAGAMENTO QUERIDO</PaymentRequiredMessage>
-      
-        </MessageContainer> </>)}
+        </>)
+          :
+          (<>
+            <MessageContainer>
+              <ErrorMessage variant="h6">Sua modalidade de ingresso não inclui hospedagem Prossiga para a escolha de atividades</ErrorMessage>
+            </MessageContainer> </>)
+        }      
+      </>)  
+
+        :(<>
+          <MessageContainer>
+            <ErrorMessage variant="h6">Você precisa ter confirmado pagamento antes de fazer a escolha de hospedagem</ErrorMessage>
+          </MessageContainer> </>)
+      }
+
+      {selectedHotel ? 
+        <><RoomCard selectedHotel={selectedHotel}/></>
+        : (<></>)
+      }
          
     </>
   );
@@ -51,7 +64,7 @@ const HotelsCardContainer = styled.section`
   display: flex;
 `;
 
-const PaymentRequiredMessage = styled(Typography)`
+const ErrorMessage = styled(Typography)`
   margin-bottom: 20px!important;
   font-family: 'Roboto';
   font-style: normal;
