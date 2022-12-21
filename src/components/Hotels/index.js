@@ -17,11 +17,7 @@ export default function Hotels() {
         <>
           <Subtitle>Primeiro, escolha seu hotel</Subtitle>
           <HotelsCardContainer>
-            {hotels ? (
-              hotels.map(hotel => <HotelCard key={hotel.id} {...hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />)
-            ) : (
-              <></>
-            )}
+            {hotels.map(hotel => <HotelCard key={hotel.id} {...hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />)}
           </HotelsCardContainer>
         </>
       ) : (
