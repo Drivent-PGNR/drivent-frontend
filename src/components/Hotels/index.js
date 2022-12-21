@@ -1,27 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Title } from '../Title';
 import { Subtitle } from '../Subtitle';
 import useHotel from '../../hooks/api/useHotel';
+import useBooking from '../../hooks/api/useBooking';
 import HotelCard from './HotelCard';
 import Typography from '@material-ui/core/Typography';
 
-export default function Hotels() {
+export default function Hotels({ next, setBooking, setHotel }) {
   const { hotels } = useHotel();
   const [selectedHotel, setSelectedHotel] = useState(0);
+  const { booking } = useBooking();
+
+  useEffect(() => {
+    if(booking) {
+      setBooking(booking);
+      const bookedHotel = hotels.find(element => element.id === booking.Room.hotelId);
+      setHotel(bookedHotel);
+      next();
+    }
+  }, [booking, hotels]);
 
   return (
     <>
-      <TitleSpacing>Escolha de hotel e quarto</TitleSpacing>
       {hotels ? (
         <>
           <Subtitle>Primeiro, escolha seu hotel</Subtitle>
           <HotelsCardContainer>
-            {hotels ? (
-              hotels.map(hotel => <HotelCard key={hotel.id} {...hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />)
-            ) : (
-              <></>
-            )}
+            {hotels.map(hotel => <HotelCard key={hotel.id} {...hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />)}
           </HotelsCardContainer>
         </>
       ) : (
@@ -32,10 +37,6 @@ export default function Hotels() {
     </>
   );
 }
-
-const TitleSpacing = styled(Title)`
-  margin-bottom: 2.3rem;
-`;
 
 const HotelsCardContainer = styled.section`
   flex-wrap: wrap;
