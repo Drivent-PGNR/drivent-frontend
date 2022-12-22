@@ -1,22 +1,29 @@
-import { useState } from 'react';
+import * as useTicket from '../../hooks/api/useTicket';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Title } from '../Title';
 import { Subtitle } from '../Subtitle';
 import useHotel from '../../hooks/api/useHotel';
 import HotelCard from './HotelCard';
 import Typography from '@material-ui/core/Typography';
-import usePayment from '../../hooks/api/usePayment';
-import RoomCard from './RoomCard';
+import RoomsCard from './RoomsCard';
 
 export default function Hotels() {
+  const { ticket } = useTicket.useTicket();
   const { hotels } = useHotel();
-  const { payment } = usePayment();
   const [selectedHotel, setSelectedHotel] = useState(0);
+  const [verifyPayment, setverifyPayment] = useState(0);
+ 
+  useEffect(() => {
+    if (ticket) {
+      setverifyPayment(ticket.status);
+    }
+  }, [ticket]); 
 
   return (
     <>
       <TitleSpacing>Escolha de hotel e quarto</TitleSpacing>
-      {payment ? (<>
+      {verifyPayment ? (<>
 
         {hotels ? (<>
 
@@ -46,7 +53,7 @@ export default function Hotels() {
       }
 
       {selectedHotel ? 
-        <><RoomCard selectedHotel={selectedHotel}/></>
+        <><RoomsCard selectedHotel={selectedHotel}/></>
         : (<></>)
       }
          
