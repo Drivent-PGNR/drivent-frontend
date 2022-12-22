@@ -1,28 +1,19 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import Typography from '@material-ui/core/Typography';
-import styled from 'styled-components';
 import useCreateTicket from '../../hooks/api/useCreateTicket';
-import useEnrollment from '../../hooks/api/useEnrollment';
 import * as useTicket from '../../hooks/api/useTicket';
 import { Section } from '../Dashboard/Section';
 import TicketCards from './TicketCards';
 
 export default function Tickets({ next }) {
-  const { enrollment } = useEnrollment();
   const { ticketTypes } = useTicket.useTicketTypes();
   const { CreateTicketLoading, CreateTicket } = useCreateTicket();
   const [stayOpt, setStayOpt] = useState([]);
   const [staySelected, setStaySelected] = useState({});
   const [hotelOpt, setHotelOpt] = useState([]);
   const [hotelSelected, setHotelSelected] = useState({});
-  const [noEnrollment, SetNoEnrollment] = useState(true);
 
   useEffect(() => {
-    if (enrollment) {
-      SetNoEnrollment(false);
-    }
-
     if (ticketTypes) {
       const arr = ticketTypes
         .filter((ticket) => (ticket.isRemote || (!ticket.isRemote && !ticket.includesHotel)))
@@ -40,7 +31,7 @@ export default function Tickets({ next }) {
           return { ...ticket, name: 'Sem Hotel', price: '+ R$ 0' };
         }));
     }
-  }, [ticketTypes, enrollment]);
+  }, [ticketTypes]);
 
   async function handleSubmit() {
     const ticketTypeId = getTicketType().id;
@@ -74,49 +65,17 @@ export default function Tickets({ next }) {
 
   return <Section>
     <Section.Title>Ingresso e pagamento</Section.Title>
-    {noEnrollment ? 
-      <MessageContainer>
-        <PaymentRequiredMessage variant="h6">Você precisa completar sua inscrição antes de prosseguir pra escolha do ingresso</PaymentRequiredMessage>
-      </MessageContainer>
-      :
-      <>
-        <Section.Subtitle>Primeiro, escolha sua modalidade de ingresso</Section.Subtitle>
-        <TicketCards data={stayOpt} selected={staySelected} setSelected={setStaySelected} />
+    <Section.Subtitle>Primeiro, escolha sua modalidade de ingresso</Section.Subtitle>
+    <TicketCards data={stayOpt} selected={staySelected} setSelected={setStaySelected} />
 
-        {(staySelected.isRemote === false) && <>
-          <Section.Subtitle>Ótimo! Agora escolha sua modalidade de hospedagem</Section.Subtitle>
-          <TicketCards data={hotelOpt} selected={hotelSelected} setSelected={setHotelSelected} />
-        </>}
+    {(staySelected.isRemote === false) && <>
+      <Section.Subtitle>Ótimo! Agora escolha sua modalidade de hospedagem</Section.Subtitle>
+      <TicketCards data={hotelOpt} selected={hotelSelected} setSelected={setHotelSelected} />
+    </>}
 
-        {(staySelected.name === 'Online' || hotelSelected.name) && <>
-          <Section.Subtitle>Fechado! O total ficou em <strong>R$ {getTicketType().price}</strong>. Agora é so confirmar:</Section.Subtitle>
-          <Section.Button onClick={handleSubmit} disabled={CreateTicketLoading}>RESERVAR INGRESSO</Section.Button>
-        </>}
-      </>}
+    {(staySelected.name === 'Online' || hotelSelected.name) && <>
+      <Section.Subtitle>Fechado! O total ficou em <strong>R$ {getTicketType().price}</strong>. Agora é so confirmar:</Section.Subtitle>
+      <Section.Button onClick={handleSubmit} disabled={CreateTicketLoading}>RESERVAR INGRESSO</Section.Button>
+    </>}
   </Section>;
 }
-
-const PaymentRequiredMessage = styled(Typography)`
-  margin-bottom: 20px!important;
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 23px;
-  text-align: center;
-  color: #8E8E8E;
-  max-width: 411px;
-`;
-
-const MessageContainer = styled(Typography)`
-  
-  word-wrap: break-word;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
