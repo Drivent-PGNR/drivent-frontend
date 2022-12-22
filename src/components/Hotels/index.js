@@ -32,7 +32,6 @@ export default function Hotels({ next, setBooking, setHotel }) {
 
   return (
     <>
-      <TitleSpacing>Escolha de hotel e quarto</TitleSpacing>
       {verifyPayment ? (<>
 
         {hotels ? (<>
@@ -100,10 +99,4 @@ const MessageContainer = styled(Typography)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-`;
-
-export const TitleSpacing = styled.h1`
-  font-size: 34px;
-  font-family: 'Roboto', sans-serif;
-  color: #000;
 `;
