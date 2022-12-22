@@ -51,6 +51,8 @@ export default function PaymentForm({ cardData, setCardData, ticketId, setPaymen
             placeholder="Card Number"
             onChange={handleInputChange}
             onFocus={handleInputFocus}
+            maxLength="16"
+            required
           />
           <input
             type="tel"
@@ -58,6 +60,7 @@ export default function PaymentForm({ cardData, setCardData, ticketId, setPaymen
             placeholder="Name"
             onChange={handleInputChange}
             onFocus={handleInputFocus}
+            required
           />
           <input
             type="tel"
@@ -65,6 +68,9 @@ export default function PaymentForm({ cardData, setCardData, ticketId, setPaymen
             placeholder="Valid Thru"
             onChange={handleInputChange}
             onFocus={handleInputFocus}
+            required
+            minLength="4"
+            maxLength="4"
           />
           <input
             type="tel"
@@ -72,6 +78,9 @@ export default function PaymentForm({ cardData, setCardData, ticketId, setPaymen
             placeholder="CVC"
             onChange={handleInputChange}
             onFocus={handleInputFocus}
+            required
+            minLength="3"
+            maxLength="3"
           />
         </form>
       </FormContainer>
