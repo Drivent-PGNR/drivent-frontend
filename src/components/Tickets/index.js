@@ -79,7 +79,7 @@ export default function Tickets({ next }) {
 
     {(staySelected.name === 'Online' || hotelSelected.name) && <>
       <Section.Subtitle>Fechado! O total ficou em <strong>R$ {getTicketType().price}</strong>. Agora é so confirmar:</Section.Subtitle>
-      <Section.Button onClick={handleSubmit} disabled={CreateTicketLoading}>RESERVER INGRESSO</Section.Button>
+      <Section.Button onClick={handleSubmit} disabled={CreateTicketLoading}>RESERVAR INGRESSO</Section.Button>
     </>}
   </Section>;
 }

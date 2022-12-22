@@ -2,7 +2,7 @@ import React from 'react';
 import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/es/styles-compiled.css';
 import styled from 'styled-components';
-import usePayment from '../../hooks/api/usePayment';
+import * as usePayment from '../../hooks/api/usePayment';
 import { toast } from 'react-toastify';
 import { Section } from '../Dashboard/Section';
 
@@ -20,7 +20,7 @@ export default function PaymentForm({ cardData, setCardData, ticketId, setPaymen
     setCardData({ ...cardData, issuer });
   };
 
-  const { insertPayment } = usePayment(cardData, ticketId);  
+  const { insertPayment } = usePayment.usePayment(cardData, ticketId);  
 
   async function handleSubmit(e) {
     e.preventDefault();
