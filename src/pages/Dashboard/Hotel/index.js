@@ -8,16 +8,22 @@ export default function Hotel() {
   const [screen, setScreen] = useState('hotel');
   const [booking, setBooking] = useState({});
   const [hotel, setHotel] = useState({});
+  const [change, setChange] = useState(false);
 
   function handleScreenChange() {
     setScreen('booking');
   };
 
+  function handleScreenChangeRoom() {
+    setScreen('hotel');
+  };
+
   return (
     <>
       <TitleSpacing>Escolha de hotel e quarto</TitleSpacing>
-      {screen === 'hotel' && <Hotels next={handleScreenChange} setBooking={setBooking} setHotel={setHotel} />}
-      {screen === 'booking' && <Booking booking={booking} hotel={hotel} />}
+      {screen === 'hotel' && <Hotels next={handleScreenChange} setBooking={setBooking} setHotel={setHotel} change={change} setChange={setChange}/>}
+      
+      {screen === 'booking' && <Booking next={handleScreenChangeRoom} booking={booking} hotel={hotel} change={change} setChange={setChange}/>}
     </>
   );
 }

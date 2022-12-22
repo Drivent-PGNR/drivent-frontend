@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Subtitle } from '../Subtitle';
+import { toast } from 'react-toastify';
 
 function createRoomMessages(room) {
   const data = {};
@@ -22,9 +23,20 @@ function createRoomMessages(room) {
   return data;
 }
 
-export function Booking({ booking, hotel }) {
+export function Booking({ next, booking, hotel, setChange }) {
   const room = hotel.Rooms.find(element => element.id === booking.Room.id);
   const roomData = createRoomMessages(room);
+
+  async function handleSubmit() {
+    try{
+      setChange(true);
+      next();
+    }
+    catch (err) {
+      toast('Não foi possível trocar o quarto!');
+    }
+  };
+
   return (
     <>
       <Subtitle>Você já escolheu seu quarto:</Subtitle>
@@ -40,6 +52,9 @@ export function Booking({ booking, hotel }) {
           <p>{roomData.bookings}</p>
         </div>
       </BookingWrapper>
+      <ChangeRoom  onClick={handleSubmit}>
+        <h4>TROCAR DE QUARTO</h4>
+      </ChangeRoom>
     </>  
   );
 }
@@ -78,3 +93,25 @@ const BookingWrapper = styled.div`
   }
 `;
 
+const ChangeRoom = styled.div`
+  width: 182px;
+  height: 37px;
+  background: #E0E0E0;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 46px;
+  cursor: pointer;
+
+  h4{
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: center;
+  color: #000000;
+  }
+`;
