@@ -22,6 +22,7 @@ import { InputWrapper } from './InputWrapper';
 import { ErrorMsg } from './ErrorMsg';
 import { ufList } from './ufList';
 import FormValidations from './FormValidations';
+import { useNavigate } from 'react-router-dom';
 
 dayjs.extend(CustomParseFormat);
 
@@ -30,6 +31,9 @@ export default function PersonalInformationForm() {
   const { getCep } = useCep();
   const { enrollment } = useEnrollment();
   const { saveEnrollmentLoading, saveEnrollment } = useSaveEnrollment();
+  const navigate = useNavigate();
+
+  const next = () => navigate('/dashboard/payment');
 
   const {
     handleSubmit,
@@ -41,7 +45,8 @@ export default function PersonalInformationForm() {
   } = useForm({
     validations: FormValidations,
 
-    onSubmit: async(data) => {
+    // eslint-disable-next-line space-before-function-paren
+    onSubmit: async (data) => {
       const newData = {
         name: data.name,
         cpf: data.cpf.replaceAll('.', '').replaceAll('-', ''),
@@ -61,6 +66,7 @@ export default function PersonalInformationForm() {
       try {
         await saveEnrollment(newData);
         toast('Informações salvas com sucesso!');
+        next();
       } catch (err) {
         toast('Não foi possível salvar suas informações!');
       }
@@ -89,6 +95,7 @@ export default function PersonalInformationForm() {
         birthday: enrollment.birthday,
         phone: enrollment.phone,
       });
+      next();
     }
   }, [enrollment]);
 
@@ -255,7 +262,7 @@ export default function PersonalInformationForm() {
               onChange={handleChange('addressDetail')}
             />
           </InputWrapper>
-          
+
           <SubmitContainer>
             <Button type="submit" disabled={dynamicInputIsLoading || saveEnrollmentLoading}>
               Salvar
