@@ -7,6 +7,7 @@ import TicketCards from './TicketCards';
 
 export default function Tickets({ next }) {
   const { ticketTypes } = useTicket.useTicketTypes();
+  const { ticket } = useTicket.useTicket();
   const { CreateTicketLoading, CreateTicket } = useCreateTicket();
   const [stayOpt, setStayOpt] = useState([]);
   const [staySelected, setStaySelected] = useState({});
@@ -14,6 +15,9 @@ export default function Tickets({ next }) {
   const [hotelSelected, setHotelSelected] = useState({});
 
   useEffect(() => {
+    if (ticket) {
+      next();
+    }
     if (ticketTypes) {
       const arr = ticketTypes
         .filter((ticket) => (ticket.isRemote || (!ticket.isRemote && !ticket.includesHotel)))
@@ -31,7 +35,7 @@ export default function Tickets({ next }) {
           return { ...ticket, name: 'Sem Hotel', price: '+ R$ 0' };
         }));
     }
-  }, [ticketTypes]);
+  }, [ticket, ticketTypes]);
 
   async function handleSubmit() {
     const ticketTypeId = getTicketType().id;

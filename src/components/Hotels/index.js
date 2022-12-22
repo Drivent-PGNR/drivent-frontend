@@ -1,14 +1,14 @@
 import * as useTicket from '../../hooks/api/useTicket';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Title } from '../Title';
 import { Subtitle } from '../Subtitle';
 import useHotel from '../../hooks/api/useHotel';
+import useBooking from '../../hooks/api/useBooking';
 import HotelCard from './HotelCard';
 import Typography from '@material-ui/core/Typography';
 import RoomsCard from './RoomsCard';
 
-export default function Hotels() {
+export default function Hotels({ next, setBooking, setHotel }) {
   const { ticket } = useTicket.useTicket();
   const { hotels } = useHotel();
   const [selectedHotel, setSelectedHotel] = useState(0);
@@ -19,6 +19,16 @@ export default function Hotels() {
       setverifyPayment(ticket.status);
     }
   }, [ticket]); 
+  const { booking } = useBooking();
+
+  useEffect(() => {
+    if(booking) {
+      setBooking(booking);
+      const bookedHotel = hotels.find(element => element.id === booking.Room.hotelId);
+      setHotel(bookedHotel);
+      next();
+    }
+  }, [booking, hotels]);
 
   return (
     <>
@@ -61,10 +71,6 @@ export default function Hotels() {
   );
 }
 
-const TitleSpacing = styled(Title)`
-  margin-bottom: 2.3rem;
-`;
-
 const HotelsCardContainer = styled.section`
   flex-wrap: wrap;
   margin-top: 1rem;
@@ -94,4 +100,10 @@ const MessageContainer = styled(Typography)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+`;
+
+export const TitleSpacing = styled.h1`
+  font-size: 34px;
+  font-family: 'Roboto', sans-serif;
+  color: #000;
 `;
