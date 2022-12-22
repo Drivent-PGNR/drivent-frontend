@@ -52,9 +52,10 @@ export default function Payment() {
       <Section.Subtitle>Pagamento</Section.Subtitle>
       <PaymentSucces /></> }
     {screen === 'enrollment' && 
+    <><Section.Title>Ingresso e pagamento</Section.Title>
       <MessageContainer>
         <PaymentRequiredMessage variant="h6">Você precisa completar sua inscrição antes de prosseguir pra escolha do ingresso</PaymentRequiredMessage>
-      </MessageContainer>}
+      </MessageContainer></>}
   </>);
 }
 
