@@ -1,20 +1,29 @@
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
-import useRoom from '../../hooks/api/useRoom';
+import useChangeBooking from '../../hooks/api/useChangeBooking';
 import RoomCard from './RoomCard';
 import { useState } from 'react';
-import useBooking from '../../hooks/api/useBooking';
+import useCreateBooking from '../../hooks/api/useCreateBooking';
 import { toast } from 'react-toastify';
+import useGetHotel from '../../hooks/api/useGetHotel';
 
-export default function RoomsCard({ selectedHotel }) {
-  const { room } = useRoom(selectedHotel);
+export default function RoomsCard({ selectedHotel, setChange, booking, next }) {
+  const { hotel } = useGetHotel(selectedHotel);
   const [selectedRoom, setSelectedRoom] = useState(0);
-  const { bookingLoading, CreateBooking } = useBooking(selectedRoom);
-   
+  const { bookingLoading, CreateBooking } = useCreateBooking(selectedRoom);
+  const { changeBooking } = useChangeBooking({ bookingId: booking?.id });
+
   async function handleSubmit() {
     try {
-      await CreateBooking({ selectedRoom });
+      if(booking) {
+        await changeBooking({ roomId: selectedRoom });
+      }
+      else {
+        await CreateBooking({ roomId: selectedRoom });
+      }
+      setChange(false);
       toast('Reserva criada com sucesso!');
+      next();
     } catch (err) {
       toast('Não foi possível realizar o booking!');
     }
@@ -25,9 +34,9 @@ export default function RoomsCard({ selectedHotel }) {
       <Message variant="h6">Ótima pedida! Agora escolha um quarto para você</Message>
       <>
       
-        {room ? 
+        {hotel ? 
           <Room>
-            {room.Rooms.map(r => <RoomCard key={r.id} {...r} selectedRoom={selectedRoom} setSelectedRoom={setSelectedRoom}/>)}
+            {hotel.Rooms.map(r => <RoomCard key={r.id} {...r} selectedRoom={selectedRoom} setSelectedRoom={setSelectedRoom}/>)}
           </Room>      
           : 
           <></>

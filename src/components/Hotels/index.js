@@ -8,21 +8,21 @@ import HotelCard from './HotelCard';
 import Typography from '@material-ui/core/Typography';
 import RoomsCard from './RoomsCard';
 
-export default function Hotels({ next, setBooking, setHotel }) {
+export default function Hotels({ next, setBooking, setHotel, change, setChange }) {
   const { ticket } = useTicket.useTicket();
   const { hotels } = useHotel();
   const [selectedHotel, setSelectedHotel] = useState(0);
   const [verifyPayment, setverifyPayment] = useState(0);
- 
+  const { booking } = useBooking();
+
   useEffect(() => {
     if (ticket) {
       setverifyPayment(ticket.status);
     }
   }, [ticket]); 
-  const { booking } = useBooking();
 
   useEffect(() => {
-    if(booking) {
+    if(booking && hotels && !change) {
       setBooking(booking);
       const bookedHotel = hotels.find(element => element.id === booking.Room.hotelId);
       setHotel(bookedHotel);
@@ -62,7 +62,7 @@ export default function Hotels({ next, setBooking, setHotel }) {
       }
 
       {selectedHotel ? 
-        <><RoomsCard selectedHotel={selectedHotel}/></>
+        <><RoomsCard selectedHotel={selectedHotel} setChange={setChange} booking={booking} next={next}/></>
         : (<></>)
       }
          
@@ -88,7 +88,7 @@ const ErrorMessage = styled(Typography)`
   max-width: 504px;
 `;
 
-const MessageContainer = styled(Typography)`
+const MessageContainer = styled.div`
   
   word-wrap: break-word;
   height: 100px;
