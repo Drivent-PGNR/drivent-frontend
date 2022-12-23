@@ -51,6 +51,7 @@ const HotelCardWrapper = styled.div`
   margin-right: 1rem;
   margin-bottom: 1rem;
   scale: 1;
+  cursor: pointer;
 
   &:active {
     transform: scale(0.97);
