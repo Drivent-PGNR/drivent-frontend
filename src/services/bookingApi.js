@@ -9,3 +9,13 @@ export async function getBooking(token) {
 
   return response.data;
 }
+
+export async function putBooking(token, bookingId, body) {
+  const response = await api.put(`/booking/${bookingId}`, body, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
