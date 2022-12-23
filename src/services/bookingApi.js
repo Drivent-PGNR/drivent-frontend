@@ -7,7 +7,7 @@ export async function getBooking(token) {
     },
   });
 
-  return response.data;
+  return response;
 }
 
 export async function putBooking(token, bookingId, body) {

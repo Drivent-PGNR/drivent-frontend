@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Subtitle } from '../Subtitle';
 import { toast } from 'react-toastify';
@@ -24,8 +25,15 @@ function createRoomMessages(room) {
 }
 
 export function Booking({ next, booking, hotel, setChange }) {
-  const room = hotel.Rooms.find(element => element.id === booking.Room.id);
-  const roomData = createRoomMessages(room);
+  const [roomData, setRoomData] = useState(null);
+
+  useEffect(() => {
+    if (booking && hotel) {
+      const room = hotel?.Rooms.find(element => element.id === booking.Room.id);
+    
+      setRoomData(createRoomMessages(room));
+    }
+  }, [booking, setRoomData]);
 
   async function handleSubmit() {
     try{
@@ -41,16 +49,19 @@ export function Booking({ next, booking, hotel, setChange }) {
     <>
       <Subtitle>Você já escolheu seu quarto:</Subtitle>
       <BookingWrapper>
-        <img src={hotel.image} alt='' />
-        <h4>{hotel.name}</h4>
-        <div>
-          <h6>Quarto reservado</h6>
-          <p>{roomData.name}</p>
-        </div>
-        <div>
-          <h6>Pessoas no seu quarto</h6>
-          <p>{roomData.bookings}</p>
-        </div>
+        {hotel && roomData && <>
+          <img src={hotel.image} alt='' />
+          <h4>{hotel.name}</h4>
+          <div>
+            <h6>Quarto reservado</h6>
+            <p>{roomData.name}</p>
+          </div>
+          <div>
+            <h6>Pessoas no seu quarto</h6>
+            <p>{roomData.bookings}</p>
+          </div>
+        </>
+        }
       </BookingWrapper>
       <ChangeRoom  onClick={handleSubmit}>
         <h4>TROCAR DE QUARTO</h4>

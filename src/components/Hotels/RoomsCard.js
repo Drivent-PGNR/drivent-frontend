@@ -2,16 +2,28 @@ import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import useChangeBooking from '../../hooks/api/useChangeBooking';
 import RoomCard from './RoomCard';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useCreateBooking from '../../hooks/api/useCreateBooking';
 import { toast } from 'react-toastify';
-import useGetHotel from '../../hooks/api/useGetHotel';
+import useToken from '../../hooks/useToken';
+import { getHotel } from '../../services/hotelApi';
 
 export default function RoomsCard({ selectedHotel, setChange, booking, next }) {
-  const { hotel } = useGetHotel(selectedHotel);
+  const [hotel, setHotel] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(0);
   const { bookingLoading, CreateBooking } = useCreateBooking(selectedRoom);
   const { changeBooking } = useChangeBooking({ bookingId: booking?.id });
+  const token = useToken();
+
+  useEffect(() => {
+    getHotel(token, selectedHotel)
+      .then(res => {
+        setHotel(res.data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, [selectedHotel]);
 
   async function handleSubmit() {
     try {
@@ -34,12 +46,10 @@ export default function RoomsCard({ selectedHotel, setChange, booking, next }) {
       <Message variant="h6">Ótima pedida! Agora escolha um quarto para você</Message>
       <>
       
-        {hotel ? 
+        {hotel &&
           <Room>
-            {hotel.Rooms.map(r => <RoomCard key={r.id} {...r} selectedRoom={selectedRoom} setSelectedRoom={setSelectedRoom}/>)}
-          </Room>      
-          : 
-          <></>
+            {hotel.Rooms.map(r => <RoomCard key={r.id} {...r} selectedRoom={selectedRoom} setSelectedRoom={setSelectedRoom} />)}
+          </Room>
         }
         <ReserveButton onClick={handleSubmit} disabled={bookingLoading}>
           <h4>RESERVAR QUARTO</h4>
