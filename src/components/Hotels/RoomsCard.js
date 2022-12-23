@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
 import useChangeBooking from '../../hooks/api/useChangeBooking';
 import RoomCard from './RoomCard';
 import { useState, useEffect } from 'react';
@@ -7,8 +6,9 @@ import useCreateBooking from '../../hooks/api/useCreateBooking';
 import { toast } from 'react-toastify';
 import useToken from '../../hooks/useToken';
 import { getHotel } from '../../services/hotelApi';
+import { Section } from '../Dashboard/Section';
 
-export default function RoomsCard({ selectedHotel, setChange, booking, next }) {
+export default function RoomsCard({ selectedHotel, setChange, booking, setBooking, next }) {
   const [hotel, setHotel] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(0);
   const { bookingLoading, CreateBooking } = useCreateBooking(selectedRoom);
@@ -20,8 +20,8 @@ export default function RoomsCard({ selectedHotel, setChange, booking, next }) {
       .then(res => {
         setHotel(res.data);
       })
-      .catch(err => {
-        console.error(err);
+      .catch(_err => {
+        return;
       });
   }, [selectedHotel]);
 
@@ -34,8 +34,8 @@ export default function RoomsCard({ selectedHotel, setChange, booking, next }) {
         await CreateBooking({ roomId: selectedRoom });
       }
       setChange(false);
+      setBooking(false);
       toast('Reserva criada com sucesso!');
-      next();
     } catch (err) {
       toast('Não foi possível realizar o booking!');
     }
@@ -43,7 +43,7 @@ export default function RoomsCard({ selectedHotel, setChange, booking, next }) {
 
   return (
     <>
-      <Message variant="h6">Ótima pedida! Agora escolha um quarto para você</Message>
+      <Section.Subtitle>Ótima pedida! Agora escolha um quarto para você</Section.Subtitle>
       <>
       
         {hotel &&
@@ -59,18 +59,6 @@ export default function RoomsCard({ selectedHotel, setChange, booking, next }) {
     </>
   );
 }
-
-const Message = styled(Typography)`
-  margin-bottom: 20px!important;
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 23px;
-  color: #8E8E8E;
-  max-width: 504px;
-  padding: 50px 0px;
-`;
 
 const ReserveButton = styled.div`
   width: 182px;
@@ -96,8 +84,9 @@ const ReserveButton = styled.div`
 `;
 
 const Room = styled.div`
-display: flex;
-flex-direction: column;
-height: 250px;
-flex-wrap: wrap;
+  display: flex;
+  flex-direction: column;
+  max-height: 250px;
+  flex-wrap: wrap;
+  margin-top: 2rem;
 `;

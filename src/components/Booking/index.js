@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Subtitle } from '../Subtitle';
-import { toast } from 'react-toastify';
 
-function createRoomMessages(room) {
+function createRoomMessages({ Room, Booking }) {
   const data = {};
-  const { name, capacity, Booking } = room;
+  const { name, capacity } = Room;
   if (capacity === 1) {
     data.name = `${name} (Single)`;
   } else if (capacity === 2) {
@@ -24,32 +23,27 @@ function createRoomMessages(room) {
   return data;
 }
 
-export function Booking({ next, booking, hotel, setChange }) {
+export function Booking({ next, booking, setChange }) {
   const [roomData, setRoomData] = useState(null);
+  const { Hotel: hotel } = booking;
 
   useEffect(() => {
-    if (booking && hotel) {
-      const room = hotel?.Rooms.find(element => element.id === booking.Room.id);
-    
-      setRoomData(createRoomMessages(room));
+    if (booking) {
+      setRoomData(createRoomMessages(booking));
     }
-  }, [booking, setRoomData]);
+  }, [booking]);
 
   async function handleSubmit() {
-    try{
-      setChange(true);
-      next();
-    }
-    catch (err) {
-      toast('Não foi possível trocar o quarto!');
-    }
+    setChange(true);
+    next();
   };
 
   return (
     <>
       <Subtitle>Você já escolheu seu quarto:</Subtitle>
       <BookingWrapper>
-        {hotel && roomData && <>
+        {roomData &&
+        <>
           <img src={hotel.image} alt='' />
           <h4>{hotel.name}</h4>
           <div>

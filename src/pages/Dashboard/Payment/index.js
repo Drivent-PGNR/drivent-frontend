@@ -4,7 +4,6 @@ import PaymentSucces from '../../../components/Payment/paymentSucces';
 import Tickets from '../../../components/Tickets';
 import useEnrollment from '../../../hooks/api/useEnrollment';
 import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
 import * as useTicket from '../../../hooks/api/useTicket';
 import { Section } from '../../../components/Dashboard/Section';
 
@@ -53,36 +52,10 @@ export default function Payment() {
       <PaymentSucces /></> }
     {screen === 'enrollment' && 
     <><Section.Title>Ingresso e pagamento</Section.Title>
-      <MessageContainer>
-        <PaymentRequiredMessage variant="h6">Você precisa completar sua inscrição antes de prosseguir pra escolha do ingresso</PaymentRequiredMessage>
-      </MessageContainer></>}
+      <Section.Warning>Você precisa completar sua inscrição antes de prosseguir pra escolha do ingresso</Section.Warning>
+    </>}
   </>);
 }
-
-const PaymentRequiredMessage = styled(Typography)`
-  margin-bottom: 20px!important;
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 23px;
-  text-align: center;
-  color: #8E8E8E;
-  max-width: 411px;
-`;
-
-const MessageContainer = styled(Typography)`
-  
-  word-wrap: break-word;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
 
 const TicketContainer = styled.div`
     width: 290px;
