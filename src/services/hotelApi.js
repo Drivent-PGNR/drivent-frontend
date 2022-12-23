@@ -17,5 +17,5 @@ export async function getHotel(token, hotelId) {
     },
   });
    
-  return response.data;
+  return response;
 }

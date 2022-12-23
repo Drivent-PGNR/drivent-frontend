@@ -3,32 +3,41 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Subtitle } from '../Subtitle';
 import useHotel from '../../hooks/api/useHotel';
-import useBooking from '../../hooks/api/useBooking';
 import HotelCard from './HotelCard';
 import Typography from '@material-ui/core/Typography';
 import RoomsCard from './RoomsCard';
+import useToken from '../../hooks/useToken';
+import { getBooking } from '../../services/bookingApi';
 
-export default function Hotels({ next, setBooking, setHotel, change, setChange }) {
+export default function Hotels({ next, booking, setBooking, setHotel, change, setChange }) {
   const { ticket } = useTicket.useTicket();
   const { hotels } = useHotel();
   const [selectedHotel, setSelectedHotel] = useState(0);
   const [verifyPayment, setverifyPayment] = useState(0);
-  const { booking } = useBooking();
+  const token = useToken();
 
   useEffect(() => {
     if (ticket) {
       setverifyPayment(ticket.status);
     }
-  }, [ticket]); 
+  }, [ticket]);
 
   useEffect(() => {
-    if(booking && hotels && !change) {
-      setBooking(booking);
-      const bookedHotel = hotels.find(element => element.id === booking.Room.hotelId);
-      setHotel(bookedHotel);
-      next();
-    }
-  }, [booking, hotels]);
+    let aux;
+    getBooking(token)
+      .then(res => {
+        aux = res.data;
+        setBooking(res.data);
+        if(aux && hotels && !change) {
+          const bookedHotel = hotels.find(element => element.id === booking.Room.hotelId);
+          setHotel(bookedHotel);
+          next();
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, [booking, setBooking, hotels, change]);
 
   return (
     <>
@@ -62,7 +71,7 @@ export default function Hotels({ next, setBooking, setHotel, change, setChange }
       }
 
       {selectedHotel ? 
-        <><RoomsCard selectedHotel={selectedHotel} setChange={setChange} booking={booking} next={next}/></>
+        <><RoomsCard selectedHotel={selectedHotel} setChange={setChange} booking={booking} next={next} /></>
         : (<></>)
       }
          
