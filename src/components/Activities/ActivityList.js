@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import styled from 'styled-components';
+import ActivityCapacity from './ActivityCapacity';
 
 export default function ActivityList({ activities, children }) {
   const [areas, setAreas] = useState({});
@@ -37,15 +38,18 @@ ActivityList.Area = ({ name: areaName, activities }) => {
     <Area>
       <h3>{areaName}</h3>
       <ul>
-        {activities?.map(({ name, startsAt, endsAt }) => {
+        {activities?.map(({ id, name, startsAt, endsAt, capacity, _count }) => {
           const [start, end] = [new Date(startsAt), new Date(endsAt)];
           const duration = end.getHours() - start.getHours();
           const timeWindow = start.toTimeString().slice(0, 5) + ' - ' + end.toTimeString().slice(0, 5);
 
           return (
-            <Area.Card duration={duration}>
-              <h5 className='title'>{name}</h5>
-              <p>{timeWindow}</p>
+            <Area.Card duration={duration} key={id}>
+						  <div>
+                <h5 className='title'>{name}</h5>
+                <p>{timeWindow}</p>
+						  </div>
+              <ActivityCapacity capacity={capacity} tickets={_count.Ticket} />
             </Area.Card>
           );
         })}
@@ -96,15 +100,21 @@ Area.Card = styled.li`
   height: ${props => `${80 * props.duration}px`};
   padding: 0.75rem;
   font-size: 12px;
+  border-radius: 5px;
   cursor: pointer;
+  display: flex;
 
-  h5{
+  div {
+    width: 75%;
+  }
+
+  div h5{
     font-size: inherit;
     font-weight: bold;
     margin-bottom: 0.5em;
   }
 
-  p{
+  div p{
     font-size: inherit
   }
 
