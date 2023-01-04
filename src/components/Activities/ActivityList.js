@@ -1,24 +1,49 @@
+import { useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
-export default function ActivityList({ children }) {
+export default function ActivityList({ activities, children }) {
+  const [areas, setAreas] = useState({});
+
+  useEffect(() => {
+    if (activities?.length > 0) {
+      activities.forEach(activity => {
+        const { name } = activity.Building;
+        const auxAreas = areas;
+
+        if (!areas[name]) {
+          auxAreas[name] = [];
+        }
+
+        auxAreas[name].push(activity);
+        setAreas(auxAreas);
+      });
+    }
+  }, [activities]);
+
   return (
     <Wrapper>
+      {activities && Object.entries(areas).map((area, index) => {
+        const [name, list] = area;
+        return <ActivityList.Area key={index} name={name} activities={list} />;
+      })}
       {children}
     </Wrapper>
   );
 }
 
-ActivityList.Area = ({ name, activities }) => {
+ActivityList.Area = ({ name: areaName, activities }) => {
   return (
     <Area>
-      <h3>{name}</h3>
+      <h3>{areaName}</h3>
       <ul>
-        {activities?.map(activity => {
-          const { name, startsAt, endsAt } = activity;
-          const timeWindow = startsAt.toTimeString().slice(0, 5) + ' - ' + endsAt.toTimeString().slice(0, 5);
+        {activities?.map(({ name, startsAt, endsAt }) => {
+          const [start, end] = [new Date(startsAt), new Date(endsAt)];
+          const duration = end.getHours() - start.getHours();
+          const timeWindow = start.toTimeString().slice(0, 5) + ' - ' + end.toTimeString().slice(0, 5);
 
           return (
-            <Area.Card>
+            <Area.Card duration={duration}>
               <h5 className='title'>{name}</h5>
               <p>{timeWindow}</p>
             </Area.Card>
@@ -68,7 +93,7 @@ const Area = styled.section`
 Area.Card = styled.li`
   background-color: #F1F1F1;
   width: 100%;
-  height: 80px;
+  height: ${props => `${80 * props.duration}px`};
   padding: 0.75rem;
   font-size: 12px;
   cursor: pointer;
