@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +13,8 @@ import EventInfoContext from '../../contexts/EventInfoContext';
 import UserContext from '../../contexts/UserContext';
 
 import useSignIn from '../../hooks/api/useSignIn';
+
+import axios from 'axios';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -38,6 +40,33 @@ export default function SignIn() {
     }
   } 
 
+  async function redirectToGitHub() {
+    const GITHUB_URL = 'https://github.com/login/oauth/authorize';
+    const params = {
+      response_type: 'code',
+      scope: 'user',
+      client_id: '3bcecdda0ca11bdd2e45',
+      redirect_uri: 'http://localhost:3000/sign-in'
+    };
+
+    const authURL = `${GITHUB_URL}?response_type=${params.response_type}&scope=${params.scope}&client_id=${params.client_id}&redirect_uri=${params.redirect_uri}`;
+    window.location.href = authURL;
+  }
+
+  useEffect(async() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      try {
+        const userData = await axios.post('http://localhost:4000/auth/sign-in/github', { code });
+        setUserData(userData.data);
+        navigate('/dashboard');
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+  }, []);
+
   return (
     <AuthLayout background={eventInfo.backgroundImageUrl}>
       <Row>
@@ -50,6 +79,7 @@ export default function SignIn() {
           <Input label="E-mail" type="text" fullWidth value={email} onChange={e => setEmail(e.target.value)} />
           <Input label="Senha" type="password" fullWidth value={password} onChange={e => setPassword(e.target.value)} />
           <Button type="submit" color="primary" fullWidth disabled={loadingSignIn}>Entrar</Button>
+          <Button onClick={redirectToGitHub} >Login with GitHub</Button>
         </form>
       </Row>
       <Row>
