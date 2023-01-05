@@ -9,3 +9,13 @@ export async function getActivitiesByDay(token, eventDay) {
 
   return response.data;
 }
+
+export async function saveActivity(activityId, token) {
+  const response = await api.post(`/activities/${activityId}/enroll`, {}, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
