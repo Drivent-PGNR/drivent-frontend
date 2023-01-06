@@ -14,7 +14,7 @@ import UserContext from '../../contexts/UserContext';
 
 import useSignIn from '../../hooks/api/useSignIn';
 
-import axios from 'axios';
+import { getGitHubData, redirectToGitHub } from './github';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -26,46 +26,39 @@ export default function SignIn() {
   const { setUserData } = useContext(UserContext);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      gitHubLogin(code);
+    }
+  });
+  async function gitHubLogin(code) {
+    try {
+      const userData = await getGitHubData(code);
+      completeLogin(userData);
+    } catch (error) {
+      toast('Não foi possível fazer o login!');
+    }
+  }
   
   async function submit(event) {
     event.preventDefault();
 
     try {
       const userData = await signIn(email, password);
-      setUserData(userData);
-      toast('Login realizado com sucesso!');
-      navigate('/dashboard');
+      completeLogin(userData);
     } catch (err) {
       toast('Não foi possível fazer o login!');
     }
-  } 
-
-  async function redirectToGitHub() {
-    const GITHUB_URL = 'https://github.com/login/oauth/authorize';
-    const params = {
-      response_type: 'code',
-      scope: 'user',
-      client_id: '3bcecdda0ca11bdd2e45',
-      redirect_uri: 'http://localhost:3000/sign-in'
-    };
-
-    const authURL = `${GITHUB_URL}?response_type=${params.response_type}&scope=${params.scope}&client_id=${params.client_id}&redirect_uri=${params.redirect_uri}`;
-    window.location.href = authURL;
   }
-
-  useEffect(async() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    if (code) {
-      try {
-        const userData = await axios.post('http://localhost:4000/auth/sign-in/github', { code });
-        setUserData(userData.data);
-        navigate('/dashboard');
-      } catch (error) {
-        console.log('error', error);
-      }
-    }
-  }, []);
+  
+  async function completeLogin(userData) {
+    setUserData(userData);
+    toast('Login realizado com sucesso!');
+    navigate('/dashboard');
+  }
 
   return (
     <AuthLayout background={eventInfo.backgroundImageUrl}>
