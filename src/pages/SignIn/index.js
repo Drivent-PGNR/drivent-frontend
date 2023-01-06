@@ -72,7 +72,7 @@ export default function SignIn() {
           <Input label="E-mail" type="text" fullWidth value={email} onChange={e => setEmail(e.target.value)} />
           <Input label="Senha" type="password" fullWidth value={password} onChange={e => setPassword(e.target.value)} />
           <Button type="submit" color="primary" fullWidth disabled={loadingSignIn}>Entrar</Button>
-          <Button onClick={redirectToGitHub} >Login with GitHub</Button>
+          <Button onClick={redirectToGitHub} >Logar com GitHub</Button>
         </form>
       </Row>
       <Row>
