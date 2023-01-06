@@ -1,6 +1,7 @@
 import { Section } from '../Dashboard/Section';
 import { useTicket } from '../../hooks/api/useTicket';
 import ActivityList from './ActivityList';
+import { useGetActivitiesByDay } from '../../hooks/api/useActivity';
 
 export default function ActivitiesSection() {
   const { ticket } = useTicket();
@@ -26,26 +27,12 @@ export default function ActivitiesSection() {
 }
 
 function Main() {
-  const mockData = [
-    { capacity: 20, name: 'Minecraft: Montando o PC Ideal', startsAt: new Date('22 January 2023 09:00 UTC'), endsAt: new Date('22 January 2023 10:00 UTC') },
-    { capacity: 10, name: 'Palestra Clean Code', startsAt: new Date('22 January 2023 10:00 UTC'), endsAt: new Date('22 January 2023 11:00 UTC') },
-    { capacity: 100, name: 'Shark Tank: Drivent!', startsAt: new Date('23 January 2023 09:00 UTC'), endsAt: new Date('23 January 2023 10:30 UTC') },
-  ];
+  const selectedDay = new Date('2023-01-22'); // mock
+  const { activities } = useGetActivitiesByDay(selectedDay.getTime());
 
   return (
-    <ActivityList>
-      <ActivityList.Area
-        name={'Auditório Principal'}
-        activities={mockData}
-      />
-      <ActivityList.Area
-        name={'Auditório Lateral'}
-        activities={mockData}
-      />
-      <ActivityList.Area
-        name={'Sala de Workshop'}
-        activities={mockData}
-      />
-    </ActivityList>
+    <>
+      {activities && <ActivityList activities={activities} />}
+    </>
   );
 }
