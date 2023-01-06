@@ -44,7 +44,7 @@ const StyledTypography = styled(Typography)`
 const StyledButton = styled.button`
   font-size: 14px;
   padding: 0.5rem 0.75rem;
-  margin: 1rem 0;
+  margin: 1.3rem 0.5rem;
   border-radius: 5px;
   border: none;
   background-color: #E0E0E0;
