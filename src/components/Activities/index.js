@@ -1,6 +1,10 @@
+import { useEffect, useState } from 'react';
 import { Section } from '../Dashboard/Section';
 import { useTicket } from '../../hooks/api/useTicket';
-import { useState } from 'react';
+import ActivityList from './ActivityList';
+import ActivityContext from '../../contexts/ActivityContext';
+import { getActivitiesByDay } from '../../services/activityApi';
+import useToken from '../../hooks/useToken';
 import useGetDayActivity from '../../hooks/api/useGetDayActivity';
 
 export default function ActivitiesSection() {
@@ -13,7 +17,7 @@ export default function ActivitiesSection() {
   console.log(selectedDay);
   
   return (
-    <>
+    <Section>
       <Section.Title>Escolha de Atividades</Section.Title>
       {ticket ?
         (!onlineTicket && !unpaidTicket)
@@ -35,10 +39,14 @@ export default function ActivitiesSection() {
                   )
                 )
                 }
+                
               </>)
                 :
                 <></>
               } 
+              {
+                selectedDay && <Main selectedDay={selectedDay}/>
+              }
             </>
           </>
           : (
@@ -50,6 +58,33 @@ export default function ActivitiesSection() {
         : 
         <Section.Loading />
       }
+    </Section>
+  );
+}
+
+function Main({ selectedDay: day }) {
+  const selectedDay = new Date(day);
+  const [activities, setActivities] = useState(false);
+  const [refresh, setRefresh] = useState(true);
+  const token = useToken();
+
+  useEffect(() => {
+    getActivitiesByDay(token, selectedDay.getTime())
+      .then(res => {
+        setActivities(res.data);
+      })
+      .catch(_err => {
+        return;
+      });
+  }, [refresh, day]);
+
+  return (
+    <>
+      {activities && (
+        <ActivityContext.Provider value={{ refresh, setRefresh }}>
+          <ActivityList activities={activities} />
+        </ActivityContext.Provider>
+      )}
     </>
   );
 }
