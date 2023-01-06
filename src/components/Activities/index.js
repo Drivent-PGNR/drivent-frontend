@@ -1,5 +1,6 @@
 import { Section } from '../Dashboard/Section';
 import { useTicket } from '../../hooks/api/useTicket';
+import { useState } from 'react';
 import useGetDayActivity from '../../hooks/api/useGetDayActivity';
 
 export default function ActivitiesSection() {
@@ -7,12 +8,15 @@ export default function ActivitiesSection() {
   const { dayActivity } = useGetDayActivity();
   const onlineTicket = ticket?.TicketType.isRemote;
   const unpaidTicket = ticket?.status !== 'PAID';
+  const [ selectedDay, setSelectedDay ] = useState();
 
+  console.log(selectedDay);
+  
   return (
     <>
       <Section.Title>Escolha de Atividades</Section.Title>
       {ticket ?
-        (!unpaidTicket)
+        (!onlineTicket && !unpaidTicket)
           ? 
           <>
             <Section.Subtitle >Primeiro, filtre pelo dia do evento</Section.Subtitle >
@@ -20,10 +24,15 @@ export default function ActivitiesSection() {
               {dayActivity ? (<>
                 {dayActivity.length > 0 && (
 
-                  dayActivity?.map(day => 
+                  dayActivity?.map(day => {
+                    const dayFormated = new Date(day).toLocaleDateString('pt-BR',
+                      {  weekday: 'long', day: 'numeric', month: 'numeric' });
+                   
+                    return <Section.Button onClick = {() => setSelectedDay(day)} style={{ textTransform: 'capitalize' }}>{dayFormated.replace('-feira', '')}
+                    </Section.Button >;
+                  } 
                 
-                    <Section.Button style={{ textTransform: 'capitalize' }}>{day}
-                    </Section.Button >)
+                  )
                 )
                 }
               </>)
