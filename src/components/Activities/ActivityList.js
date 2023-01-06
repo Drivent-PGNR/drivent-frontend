@@ -4,28 +4,29 @@ import styled from 'styled-components';
 import ActivityCard from './ActivityCard';
 
 export default function ActivityList({ activities, children }) {
-  const [areas, setAreas] = useState({});
-  console.log(activities, children);
+  const [areasList, setAreasList] = useState([]);
 
   useEffect(() => {
     if (activities?.length > 0) {
+      let aux = {};
       activities.forEach(activity => {
         const { name } = activity.Building;
-        const auxAreas = areas;
-
-        if (!areas[name]) {
+        const auxAreas = aux;
+        
+        if (!aux[name]) {
           auxAreas[name] = [];
         }
 
         auxAreas[name].push(activity);
-        setAreas(auxAreas);
+        aux = { ...auxAreas };
       });
+      setAreasList(Object.entries(aux));
     }
   }, [activities]);
 
   return (
     <Wrapper>
-      {activities && Object.entries(areas).map((area, index) => {
+      {areasList.length > 0 && areasList.map((area, index) => {
         const [name, list] = area;
         return <ActivityList.Area key={index} name={name} activities={list} />;
       })}
