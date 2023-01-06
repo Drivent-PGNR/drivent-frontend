@@ -23,7 +23,7 @@ export default function ActivityList({ activities, children }) {
       setAreasList(Object.entries(aux));
     }
   }, [activities]);
-
+  
   return (
     <Wrapper>
       {areasList.length > 0 && areasList.map((area, index) => {
@@ -53,7 +53,7 @@ const Wrapper = styled.div`
   flex: 1;
   overflow-x: auto;
   width: 100%;
-  height: 90%;
+  height: 80%;
 `;
 
 const Area = styled.section`

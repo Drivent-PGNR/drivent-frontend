@@ -14,7 +14,7 @@ export default function ActivityCard({ id, name, startsAt, endsAt, capacity, _co
   const { userData } = useContext(UserContext);
   const { refresh, setRefresh } = useContext(ActivityContext);
 
-  const userEnroll = Ticket.some(element => element.Enrollment.userId === userData.user.id);
+  const userEnroll = Ticket?.some(element => element.Enrollment.userId === userData.user.id);
 
   async function handleSubmit() {
     if (userEnroll) return;
