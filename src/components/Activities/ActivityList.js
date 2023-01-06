@@ -21,7 +21,7 @@ export default function ActivityList({ activities, children }) {
       });
     }
   }, [activities]);
-
+  
   return (
     <Wrapper>
       {activities && Object.entries(areas).map((area, index) => {
