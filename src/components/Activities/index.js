@@ -1,7 +1,10 @@
+import { useEffect, useState } from 'react';
 import { Section } from '../Dashboard/Section';
 import { useTicket } from '../../hooks/api/useTicket';
 import ActivityList from './ActivityList';
-import { useGetActivitiesByDay } from '../../hooks/api/useActivity';
+import ActivityContext from '../../contexts/ActivityContext';
+import { getActivitiesByDay } from '../../services/activityApi';
+import useToken from '../../hooks/useToken';
 
 export default function ActivitiesSection() {
   const { ticket } = useTicket();
@@ -28,11 +31,27 @@ export default function ActivitiesSection() {
 
 function Main() {
   const selectedDay = new Date('2023-01-22'); // mock
-  const { activities } = useGetActivitiesByDay(selectedDay.getTime());
+  const [activities, setActivities] = useState(false);
+  const [refresh, setRefresh] = useState(true);
+  const token = useToken();
+
+  useEffect(() => {
+    getActivitiesByDay(token, selectedDay.getTime())
+      .then(res => {
+        setActivities(res.data);
+      })
+      .catch(_err => {
+        return;
+      });
+  }, [refresh]);
 
   return (
     <>
-      {activities && <ActivityList activities={activities} />}
+      {activities && (
+        <ActivityContext.Provider value={{ refresh, setRefresh }}>
+          <ActivityList activities={activities} />
+        </ActivityContext.Provider>
+      )}
     </>
   );
 }

@@ -7,5 +7,15 @@ export async function getActivitiesByDay(token, eventDay) {
     },
   });
 
+  return response;
+}
+
+export async function saveActivity(activityId, token) {
+  const response = await api.post(`/activities/${activityId}`, {}, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   return response.data;
 }

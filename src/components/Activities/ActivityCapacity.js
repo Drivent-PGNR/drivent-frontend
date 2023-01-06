@@ -1,20 +1,28 @@
-import { IoEnterOutline, IoCloseCircleOutline } from 'react-icons/io5';
+import { IoEnterOutline, IoCloseCircleOutline, IoCheckmarkCircleOutline } from 'react-icons/io5';
 import styled from 'styled-components';
 
-export default function ActivityCapacity({ capacity, tickets }) {
+export default function ActivityCapacity({ capacity, tickets, userEnroll }) {
   const vacancy = capacity - tickets;
+
   return (
-    <Wrapper vacancy={vacancy}>
-      {vacancy > 0 ? (
+    <Wrapper vacancy={vacancy} userEnroll={userEnroll}>
+      {userEnroll ? (
         <>
-          <IoEnterOutline />
-          <p>{vacancy} vagas</p>
+          <IoCheckmarkCircleOutline />
+          <p>Inscrito</p>
         </>
       ) : (
-        <>
-          <IoCloseCircleOutline />
-          <p>Esgotado</p>
-        </>
+        vacancy > 0 ? (
+          <>
+            <IoEnterOutline />
+            <p>{vacancy} vagas</p>
+          </>
+        ) : (
+          <>
+            <IoCloseCircleOutline />
+            <p>Esgotado</p>
+          </>
+        )
       )}
     </Wrapper>
   );
@@ -31,6 +39,7 @@ const Wrapper = styled.aside`
   border-left: 1px solid #CFCFCF;
 
   svg {
+    --ionicon-stroke-width: 20px;
     font-size: 20px;
     margin-bottom: 0.2rem;
   }
