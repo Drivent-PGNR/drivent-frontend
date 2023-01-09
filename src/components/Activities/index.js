@@ -14,8 +14,6 @@ export default function ActivitiesSection() {
   const unpaidTicket = ticket?.status !== 'PAID';
   const [ selectedDay, setSelectedDay ] = useState();
 
-  console.log(selectedDay);
-  
   return (
     <Section>
       <Section.Title>Escolha de Atividades</Section.Title>
