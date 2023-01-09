@@ -8,6 +8,7 @@ import Input from '../../components/Form/Input';
 import Button from '../../components/Form/Button';
 import Link from '../../components/Link';
 import { Row, Title, Label } from '../../components/Auth';
+import { Section } from '../../components/Dashboard/Section';
 
 import EventInfoContext from '../../contexts/EventInfoContext';
 import UserContext from '../../contexts/UserContext';
@@ -19,6 +20,7 @@ import { getGitHubData, redirectToGitHub } from './github';
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const { loadingSignIn, signIn } = useSignIn();
 
@@ -31,9 +33,11 @@ export default function SignIn() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     if (code) {
+      setLoading(true);
       gitHubLogin(code);
     }
-  });
+  }, []);
+
   async function gitHubLogin(code) {
     try {
       const userData = await getGitHubData(code);
@@ -61,23 +65,34 @@ export default function SignIn() {
   }
 
   return (
-    <AuthLayout background={eventInfo.backgroundImageUrl}>
-      <Row>
-        <img src={eventInfo.logoImageUrl} alt="Event Logo" width="60px" />
-        <Title>{eventInfo.title}</Title>
-      </Row>
-      <Row>
-        <Label>Entrar</Label>
-        <form onSubmit={submit}>
-          <Input label="E-mail" type="text" fullWidth value={email} onChange={e => setEmail(e.target.value)} />
-          <Input label="Senha" type="password" fullWidth value={password} onChange={e => setPassword(e.target.value)} />
-          <Button type="submit" color="primary" fullWidth disabled={loadingSignIn}>Entrar</Button>
-          <Button onClick={redirectToGitHub} >Logar com GitHub</Button>
-        </form>
-      </Row>
-      <Row>
-        <Link to="/enroll">Não possui login? Inscreva-se</Link>
-      </Row>
-    </AuthLayout>
+    loading ? 
+      <AuthLayout background={eventInfo.backgroundImageUrl}>
+        <Row>
+          <img src={eventInfo.logoImageUrl} alt="Event Logo" width="60px" />
+          <Title>{eventInfo.title}</Title>
+        </Row>
+        <Section.Subtitle>Fazendo login...</Section.Subtitle>
+        <Row></Row>
+      </AuthLayout> 
+      :
+      <AuthLayout background={eventInfo.backgroundImageUrl}>
+        <Row>
+          <img src={eventInfo.logoImageUrl} alt="Event Logo" width="60px" />
+          <Title>{eventInfo.title}</Title>
+        </Row>
+        
+        <Row>
+          <Label>Entrar</Label>
+          <form onSubmit={submit}>
+            <Input label="E-mail" type="text" fullWidth value={email} onChange={e => setEmail(e.target.value)} />
+            <Input label="Senha" type="password" fullWidth value={password} onChange={e => setPassword(e.target.value)} />
+            <Button type="submit" color="primary" fullWidth disabled={loadingSignIn}>Entrar</Button>
+            <Button onClick={redirectToGitHub} >Logar com GitHub</Button>
+          </form>
+        </Row>
+        <Row>
+          <Link to="/enroll">Não possui login? Inscreva-se</Link>
+        </Row>
+      </AuthLayout>
   );
 }
