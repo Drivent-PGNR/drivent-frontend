@@ -47,7 +47,7 @@ const StyledButton = styled.button`
   margin: 1.2rem 0.5rem ;
   border-radius: 5px;
   border: none;
-  background-color: #E0E0E0;
+  background-color: ${props => props.selected ? '#FFD37D' : '#E0E0E0' };
   box-shadow: 0px 2px 10px #00000040;
   cursor: pointer;
   pointer-events: ${props => props.disabled && 'none'};

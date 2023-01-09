@@ -32,7 +32,8 @@ export default function ActivitiesSection() {
                     const dayFormated = new Date(day).toLocaleDateString('pt-BR',
                       {  weekday: 'long', day: 'numeric', month: 'numeric' });
                    
-                    return <Section.Button onClick = {() => setSelectedDay(day)} style={{ textTransform: 'capitalize' }}>{dayFormated.replace('-feira', '')}
+                    return <Section.Button onClick = {() => setSelectedDay(day)} style={{ textTransform: 'capitalize' }} 
+                      selected={selectedDay === day}>{dayFormated.replace('-feira', '')}
                     </Section.Button >;
                   } 
                 
