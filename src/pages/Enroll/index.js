@@ -1,18 +1,20 @@
 import { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { AiFillGithub as GithubLogo } from 'react-icons/ai';
 
 import AuthLayout from '../../layouts/Auth';
 
 import Input from '../../components/Form/Input';
 import Button from '../../components/Form/Button';
-import { Row, Title, Label } from '../../components/Auth';
+import { Row, Title, Label, OauthButton } from '../../components/Auth';
 import Link from '../../components/Link';
 
 import EventInfoContext from '../../contexts/EventInfoContext';
 
 import useSignUp from '../../hooks/api/useSignUp';
 import { redirectToGitHub } from '../SignIn/github';
+import Divider from '../../components/Form/Divider';
 
 export default function Enroll() {
   const [email, setEmail] = useState('');
@@ -22,7 +24,7 @@ export default function Enroll() {
   const { loadingSignUp, signUp } = useSignUp();
 
   const navigate = useNavigate();
-  
+
   const { eventInfo } = useContext(EventInfoContext);
 
   async function submit(event) {
@@ -54,7 +56,11 @@ export default function Enroll() {
           <Input label="Senha" type="password" fullWidth value={password} onChange={e => setPassword(e.target.value)} />
           <Input label="Repita sua senha" type="password" fullWidth value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
           <Button type="submit" color="primary" fullWidth disabled={loadingSignUp}>Inscrever</Button>
-          <Button onClick={redirectToGitHub}>Logar com GitHub</Button>
+          <Divider>ou</Divider>
+          <OauthButton variant={'contained'} fullWidth disabled={loadingSignUp} onClick={redirectToGitHub}>
+            <GithubLogo size={36} />
+            <span>Github</span>
+          </OauthButton>
         </form>
       </Row>
       <Row>

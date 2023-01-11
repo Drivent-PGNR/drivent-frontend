@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import MuiButton from '@material-ui/core/Button';
 import Container from '../Container';
 
 export const StyledContainer = styled(Container)`
@@ -26,4 +26,12 @@ export const Row = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
+`;
+
+export const OauthButton = styled(MuiButton)`
+  border: 1px solid grey;
+  
+  span{
+    margin-left: 0.25rem;
+  }
 `;
