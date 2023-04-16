@@ -32,6 +32,8 @@ export default function Enroll() {
 
     if (password !== confirmPassword) {
       toast('As senhas devem ser iguais!');
+    } else if (password.length < 6) {
+      toast('Por favor, insira uma senha com pelo menos 6 caracteres.');
     } else {
       try {
         await signUp(email, password);
@@ -53,8 +55,8 @@ export default function Enroll() {
         <Label>Inscrição</Label>
         <form onSubmit={submit}>
           <Input label="E-mail" type="text" fullWidth value={email} onChange={e => setEmail(e.target.value)} />
-          <Input label="Senha" type="password" fullWidth value={password} onChange={e => setPassword(e.target.value)} />
-          <Input label="Repita sua senha" type="password" fullWidth value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+          <Input label="Senha" minLength={6} type="password" fullWidth value={password} onChange={e => setPassword(e.target.value)} />
+          <Input label="Repita sua senha" minLength={6} type="password" fullWidth value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
           <Button type="submit" color="primary" fullWidth disabled={loadingSignUp}>Inscrever</Button>
           <Divider>ou</Divider>
           <OauthButton variant={'contained'} fullWidth disabled={loadingSignUp} onClick={redirectToGitHub}>
